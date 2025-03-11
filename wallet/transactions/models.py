@@ -1,14 +1,9 @@
 ﻿from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column,relationship
 import typing
-from enum import StrEnum
 from datetime import datetime
 
 from wallet.setup.db import Base
-
-class TypeOfTransaction(StrEnum):
-    Send = "Send"
-    Receive = "Receive"
 
 
 class TransactionModel(Base):

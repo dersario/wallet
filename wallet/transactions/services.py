@@ -7,7 +7,7 @@ from wallet.setup.auth import AuthenticatedAccount
 from wallet.setup.dependencies import UserServiceDep
 from wallet.transactions.repositories import TransactionRepository
 from wallet.transactions.models import TransactionModel
-from wallet.transactions.schemas import MakeTransactionSchema
+from wallet.transactions.schemas import MakeTransactionSchema, ResponseTransactionSchema
 from wallet.users.models import UserModel
 from wallet.users.schemas import UserSchema
 
@@ -20,6 +20,8 @@ class TransactionService:
     async def create_transaction(self, sender:UserSchema, schema: MakeTransactionSchema, session: AsyncSession, service: UserServiceDep):
         transaction = TransactionModel(date = datetime.now(), sum = schema.sum, receiver = schema.receiver, sender=sender.name)
         receiver = await service.find_by_name(schema.receiver, session)
+        if receiver.name == sender.name:
+            raise HTTPException(status.HTTP_400_BAD_REQUEST, detail="Не пытайтесь отправить деньги самому себе")
         if receiver is None:
             raise HTTPException(status.HTTP_409_CONFLICT, detail="Получателя не существует")
         await service.update_balance(sender.id,receiver,schema.sum,session)
@@ -36,10 +38,28 @@ class TransactionService:
     
 
     async def get_of_period(self, date_1:date, date_2:date, current_user:AuthenticatedAccount, session:AsyncSession):
-        transactions = await self.__repository.get_all_by_sender(current_user.name,session)
-        t = []
+        transactions: set[TransactionModel] = set(await self.__repository.get_all_by_sender(current_user.name,session))
+        transactions.update((await self.__repository.get_all_by_receiver(current_user.name,session)))
+        t: list[ResponseTransactionSchema] = []
         for i in transactions:
             date = i.date.date()
             if date >date_1 and date < date_2:
-                t.append(i)
+                if i.sender == current_user.name:
+                    new_i = ResponseTransactionSchema(
+                        sum=i.sum,
+                        sender=i.sender,
+                        receiver=i.receiver,
+                        date= i.date,
+                        type = "Send"
+                    )
+                    
+                else:
+                    new_i = ResponseTransactionSchema(
+                        sum=i.sum,
+                        sender=i.sender,
+                        receiver=i.receiver,
+                        date= i.date,
+                        type = "Receive"
+                    )
+                t.append(new_i)
         return t

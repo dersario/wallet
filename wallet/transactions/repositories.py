@@ -14,6 +14,11 @@ class TransactionRepository:
         s = await session.execute(q)
         return list(s.scalars().all())
     
+    async def get_all_by_receiver(self, name:str, session: AsyncSession):
+        q = select(TransactionModel).where(TransactionModel.receiver == name)
+        s = await session.execute(q)
+        return list(s.scalars().all())
+    
 
     async def find_by_id(self, id: int, session: AsyncSession):
         return await session.get(TransactionModel, id)

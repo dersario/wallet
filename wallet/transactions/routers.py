@@ -4,7 +4,7 @@ from wallet.setup.dependencies import SessionDep, UserServiceDep
 from wallet.transactions.dependencies import TransactionServiceDep
 from wallet.setup.permissions import Anonymous, Authenticated
 from wallet.setup.auth import AuthorizedAccount, AuthenticatedAccount
-from wallet.transactions.schemas import MakeTransactionSchema, TransactionSchema
+from wallet.transactions.schemas import MakeTransactionSchema, ResponseTransactionSchema, TransactionSchema
 
 
 transactions_routers = APIRouter(prefix="/transactions", tags=["Транзакции"])
@@ -23,10 +23,10 @@ async def make_transaction(
 
 @transactions_routers.get("")
 async def get_transactions_of_period(
-    date1: date,
-    date2: date,
     session:SessionDep,
     current_user:AuthenticatedAccount,
-    service:TransactionServiceDep
-) -> list[TransactionSchema]:
+    service:TransactionServiceDep,
+    date1: date = date(2025,2,10),
+    date2: date = date(2025,3,16),
+) -> list[ResponseTransactionSchema]:
     return await service.get_of_period(date1,date2,current_user, session)

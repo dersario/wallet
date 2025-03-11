@@ -1,6 +1,11 @@
 ﻿from datetime import datetime
+from enum import StrEnum
 from pydantic import BaseModel, ConfigDict, StringConstraints
 from typing import Annotated
+
+class TypeOfTransaction(StrEnum):
+    Send = "Send"
+    Receive = "Receive"
 
 class MakeTransactionSchema(BaseModel):
     #model_config = ConfigDict(from_attributes=True)
@@ -13,3 +18,6 @@ class TransactionSchema(BaseModel):
     sender: str
     receiver: str
     date: datetime
+
+class ResponseTransactionSchema(TransactionSchema):
+    type: TypeOfTransaction

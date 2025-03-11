@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "wallet"
+version = "0.1.0"
+description = ""
+authors = ["dersar <vanya20061482@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.13"
+fastapi = "^0.115.11"
+pydantic = "^2.10.6"
+uvicorn = "^0.34.0"
+pydantic-settings = "^2.8.1"
+sqlalchemy = "^2.0.38"
+aiosqlite = "^0.21.0"
+
+[tool.poetry.scripts]
+start = "wallet.main:start"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

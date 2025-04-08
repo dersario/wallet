@@ -1,0 +1,6 @@
+[04/08/25] INFO root: info
+[04/08/25] ERROR root: Critical err
+[04/08/25] INFO wallet.setup.setup: Starting
+[04/08/25] INFO wallet.setup.setup: Started
+[04/08/25] INFO wallet.setup.setup: Stopping app
+[04/08/25] INFO wallet.setup.setup: Stoped.

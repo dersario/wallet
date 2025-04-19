@@ -13,3 +13,8 @@ class UserSchema(BaseModel):
 class RegisterUserSchema(BaseModel):
     name: Annotated[str, StringConstraints(strip_whitespace=True, min_length=1)]
     password: Annotated[str, StringConstraints(min_length=8)]
+
+
+class GetTokenSchema(BaseModel):
+    name: Annotated[str, StringConstraints(strip_whitespace=True, min_length=1)]
+    password: Annotated[str, StringConstraints(min_length=8)]

@@ -5,7 +5,7 @@ from wallet.setup.auth import (
     AuthorizedAccount,
     create_token,
 )
-from wallet.setup.dependencies import SessionDep, UserServiceDep
+from wallet.setup.dependencies import SessionDep, Token, UserServiceDep
 from wallet.setup.permissions import Authenticated
 from wallet.users.schemas import GetTokenSchema, RegisterUserSchema, UserSchema
 
@@ -14,10 +14,10 @@ users_routers = APIRouter(prefix="/users", tags=["Пользватели"])
 
 @users_routers.post("/get_token")
 async def get_token(
-    schema: GetTokenSchema, service: UserServiceDep, session: SessionDep
+    schema: GetTokenSchema, service: UserServiceDep, token: Token, session: SessionDep
 ):
     user = await service.authorize(schema, session)
-    token = await create_token(user.id)
+    token = await create_token(user.id, token)
 
     return token
 

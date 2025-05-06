@@ -21,6 +21,7 @@ class DatabaseManager:
             self._session_maker = async_sessionmaker(
                 self._engine,
                 expire_on_commit=False,
+                autoflush=False,  # автоматическое получение добавленных данных expire on commit  новые данных не устаревают сразу же
             )
             async with self._engine.begin() as connect:
                 await connect.run_sync(Base.metadata.create_all)
@@ -36,5 +37,6 @@ class DatabaseManager:
         async with self._session_maker() as session:
             try:
                 yield session
-            finally:
+            except Exception:
                 await session.rollback()
+                raise

@@ -1,17 +1,10 @@
-﻿import os
-
-from dotenv import load_dotenv
-from fastapi import HTTPException, status
+﻿from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from wallet.setup.exceptions import EntityAlreadyExistsException, NotFoundException
 from wallet.users.models import UserModel
 from wallet.users.repositories import UserRepository
 from wallet.users.schemas import GetTokenSchema, RegisterUserSchema
-
-load_dotenv()
-
-TOKEN_SECRET = os.getenv("TOKEN_SECRET")
 
 
 class UserService:

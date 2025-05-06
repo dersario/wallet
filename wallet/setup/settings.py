@@ -1,5 +1,7 @@
-﻿from pydantic_settings import BaseSettings
+﻿from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class AppSettings(BaseSettings):
-    db_url: str = "sqlite+aiosqlite:///database.db"
+    model_config = SettingsConfigDict(env_file=".env")
+    token_secret: str
+    db_url: str

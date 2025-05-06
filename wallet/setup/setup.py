@@ -48,6 +48,7 @@ def setup_app():
     user_repository = UserRepository()
     transaction_reporitory = TransactionRepository()
 
+    app.state.token_secret = settings.token_secret
     app.state.db_manager = DatabaseManager(settings.db_url)
     app.state.user_service = UserService(user_repository)
     app.state.transaction_service = TransactionService(transaction_reporitory)
